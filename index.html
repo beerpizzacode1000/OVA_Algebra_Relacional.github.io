@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Álgebra Relacional - OVA Interactivo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            background: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .content-section {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: fadeIn 0.5s;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .definition-box {
+            background: #f0f4ff;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .example-box {
+            background: #fff9e6;
+            border: 2px solid #ffd700;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .interactive-area {
+            background: #f9f9f9;
+            border: 2px dashed #667eea;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .btn-execute {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 10px 5px;
+        }
+
+        .btn-execute:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        .result-table {
+            margin-top: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .formula {
+            background: #e8eaf6;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            margin: 15px 0;
+            text-align: center;
+            color: #1a237e;
+        }
+
+        .checkbox-group {
+            margin: 15px 0;
+        }
+
+        .checkbox-group label {
+            display: inline-block;
+            margin: 5px 15px 5px 5px;
+            cursor: pointer;
+            padding: 8px 15px;
+            background: #f0f4ff;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        input[type="text"], select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            margin: 5px;
+            transition: border 0.3s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .operation-symbol {
+            font-size: 2em;
+            color: #667eea;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .note {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .warning {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Álgebra Relacional</h1>
+            <p>Aprende los fundamentos del modelo relacional de bases de datos</p>
+        </header>
+
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="showSection('intro')">Introducción</button>
+            <button class="nav-btn" onclick="showSection('seleccion')">Selección (σ)</button>
+            <button class="nav-btn" onclick="showSection('proyeccion')">Proyección (π)</button>
+            <button class="nav-btn" onclick="showSection('union')">Unión (∪)</button>
+            <button class="nav-btn" onclick="showSection('diferencia')">Diferencia (−)</button>
+            <button class="nav-btn" onclick="showSection('producto')">Producto (×)</button>
+            <button class="nav-btn" onclick="showSection('join')">Join (⋈)</button>
+            <button class="nav-btn" onclick="showSection('division')">División (÷)</button>
+            <button class="nav-btn" onclick="showSection('practica')">Práctica</button>
+        </div>
+
+        <!-- Sección Introducción -->
+        <div id="intro" class="content-section active">
+            <h2>🎯 Introducción al Álgebra Relacional</h2>
+            
+            <div class="definition-box">
+                <h3>¿Qué es el Álgebra Relacional?</h3>
+                <p>El Álgebra Relacional es un lenguaje de consulta procedimental que consiste en un conjunto de operaciones que toman una o dos relaciones como entrada y producen una nueva relación como resultado.</p>
+            </div>
+
+            <h3>Características Principales</h3>
+            <ul style="margin-left: 25px; margin-top: 15px;">
+                <li><strong>Lenguaje formal:</strong> Base matemática para las bases de datos relacionales</li>
+                <li><strong>Operaciones fundamentales:</strong> Permite manipular y consultar datos</li>
+                <li><strong>Cierre relacional:</strong> El resultado de toda operación es una relación</li>
+                <li><strong>Base de SQL:</strong> SQL se fundamenta en el álgebra relacional</li>
+            </ul>
+
+            <h3>Operaciones del Álgebra Relacional</h3>
+            <div class="grid-2">
+                <div style="background: #f0f4ff; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #667eea;">Operaciones Unarias</h4>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Selección (σ)</li>
+                        <li>Proyección (π)</li>
+                    </ul>
+                </div>
+                <div style="background: #fff9e6; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #764ba2;">Operaciones Binarias</h4>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Unión (∪)</li>
+                        <li>Diferencia (−)</li>
+                        <li>Producto Cartesiano (×)</li>
+                        <li>Join (⋈)</li>
+                        <li>División (÷)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="note">
+                <strong>💡 Nota importante:</strong> Cada operación toma una o dos relaciones (tablas) como entrada y produce una nueva relación como salida. Esto permite encadenar operaciones para crear consultas complejas.
+            </div>
+        </div>
+
+        <!-- Sección Selección -->
+        <div id="seleccion" class="content-section">
+            <h2>🔍 Operación de Selección (σ)</h2>
+            
+            <div class="definition-box">
+                <h3>Definición</h3>
+                <p>La operación de <strong>selección</strong> permite seleccionar tuplas (filas) de una relación que satisfacen un predicado (condición) dado.</p>
+                <div class="formula">σ<sub>condición</sub>(Relación)</div>
+            </div>
+
+            <h3>Tabla de Ejemplo: ESTUDIANTES</h3>
+            <table id="tabla-estudiantes">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Edad</th>
+                        <th>Carrera</th>
+                        <th>Promedio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>Ana García</td><td>20</td><td>Sistemas</td><td>4.5</td></tr>
+                    <tr><td>2</td><td>Carlos López</td><td>22</td><td>Industrial</td><td>3.8</td></tr>
+                    <tr><td>3</td><td>María Rodríguez</td><td>19</td><td>Sistemas</td><td>4.2</td></tr>
+                    <tr><td>4</td><td>Juan Martínez</td><td>21</td><td>Civil</td><td>3.5</td></tr>
+                    <tr><td>5</td><td>Laura Fernández</td><td>20</td><td>Sistemas</td><td>4.7</td></tr>
+                </tbody>
+            </table>
+
+            <div class="interactive-area">
+                <h3>🎮 Práctica Interactiva</h3>
+                <p>Selecciona una condición para filtrar los estudiantes:</p>
+                
+                <select id="sel-condicion" style="width: 100%; margin: 15px 0;">
+                    <option value="carrera">σ Carrera = 'Sistemas' (Mostrar solo estudiantes de Sistemas)</option>
+                    <option value="edad">σ Edad ≥ 21 (Mostrar estudiantes con 21 años o más)</option>
+                    <option value="promedio">σ Promedio > 4.0 (Mostrar estudiantes con promedio mayor a 4.0)</option>
+                    <option value="multiples">σ Carrera = 'Sistemas' AND Promedio ≥ 4.5 (Condiciones múltiples)</option>
+                </select>
+                
+                <button class="btn-execute" onclick="ejecutarSeleccion()">🔍 Ejecutar Selección</button>
+                <button class="btn-execute" onclick="resetSeleccion()" style="background: #757575;">🔄 Restablecer</button>
+                
+                <div id="resultado-seleccion" class="result-table"></div>
+            </div>
+
+            <div class="example-box">
+                <h4>💡 Ejemplos de Predicados</h4>
+                <ul style="margin-left: 25px; margin-top: 10px;">
+                    <li><strong>Comparación:</strong> σ<sub>Edad > 20</sub>(ESTUDIANTES)</li>
+                    <li><strong>Igualdad:</strong> σ<sub>Carrera = 'Sistemas'</sub>(ESTUDIANTES)</li>
+                    <li><strong>Conjunción:</strong> σ<sub>Edad > 20 AND Promedio > 4.0</sub>(ESTUDIANTES)</li>
+                    <li><strong>Disyunción:</strong> σ<sub>Carrera = 'Sistemas' OR Carrera = 'Industrial'</sub>(ESTUDIANTES)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Sección Proyección -->
+        <div id="proyeccion" class="content-section">
+            <h2>📊 Operación de Proyección (π)</h2>
+            
+            <div class="definition-box">
+                <h3>Definición</h3>
+                <p>La operación de <strong>proyección</strong> selecciona columnas específicas de una relación, eliminando las columnas no seleccionadas y eliminando tuplas duplicadas.</p>
+                <div class="formula">π<sub>atributo1, atributo2, ...</sub>(Relación)</div>
+            </div>
+
+            <h3>Tabla Original: ESTUDIANTES</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Edad</th>
+                        <th>Carrera</th>
+                        <th>Promedio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>Ana García</td><td>20</td><td>Sistemas</td><td>4.5</td></tr>
+                    <tr><td>2</td><td>Carlos López</td><td>22</td><td>Industrial</td><td>3.8</td></tr>
+                    <tr><td>3</td><td>María Rodríguez</td><td>19</td><td>Sistemas</td><td>4.2</td></tr>
+                    <tr><td>4</td><td>Juan Martínez</td><td>21</td><td>Civil</td><td>3.5</td></tr>
+                    <tr><td>5</td><td>Laura Fernández</td><td>20</td><td>Sistemas</td><td>4.7</td></tr>
+                </tbody>
+            </table>
+
+            <div class="interactive-area">
+                <h3>🎮 Práctica Interactiva</h3>
+                <p>Selecciona las columnas que deseas proyectar:</p>
+                
+                <div class="checkbox-group" id="proyeccion-checkboxes">
+                    <label><input type="checkbox" value="ID" checked> ID</label>
+                    <label><input type="checkbox" value="Nombre" checked> Nombre</label>
+                    <label><input type="checkbox" value="Edad"> Edad</label>
+                    <label><input type="checkbox" value="Carrera" checked> Carrera</label>
+                    <label><input type="checkbox" value="Promedio"> Promedio</label>
+                </div>
+                
+                <button class="btn-execute" onclick="ejecutarProyeccion()">📊 Ejecutar Proyección</button>
+                <button class="btn-execute" onclick="resetProyeccion()" style="background: #757575;">🔄 Restablecer</button>
+                
+                <div id="resultado-proyeccion" class="result-table"></div>
+            </div>
+
+            <div class="note">
+                <strong>💡 Característica importante:</strong> La proyección elimina automáticamente las tuplas duplicadas. Si dos estudiantes tienen los mismos valores en las columnas proyectadas, solo se mostrará una vez.
+            </div>
+
+            <div class="example-box">
+                <h4>💡 Ejemplos de Proyección</h4>
+                <ul style="margin-left: 25px; margin-top: 10px;">
+                    <li>π<sub>Nombre, Carrera</sub>(ESTUDIANTES) - Solo nombres y carreras</li>
+                    <li>π<sub>Carrera</sub>(ESTUDIANTES) - Lista de carreras sin duplicados</li>
+                    <li>π<sub>Nombre, Promedio</sub>(ESTUDIANTES) - Nombres y promedios</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Sección Unión -->
+        <div id="union" class="content-section">
+            <h2>🔗 Operación de Unión (∪)</h2>
+            
+            <div class="definition-box">
+                <h3>Definición</h3>
+                <p>La operación de <strong>unión</strong> combina tuplas de dos relaciones compatibles, eliminando duplicados. Las relaciones deben tener el mismo número de atributos y tipos compatibles.</p>
+                <div class="formula">R ∪ S</div>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Requisito importante:</strong> Para realizar la unión, ambas relaciones deben ser compatibles (mismo número de columnas y tipos de datos compatibles).
+            </div>
+
+            <div class="grid-2">
+                <div>
+                    <h3>Tabla: ESTUDIANTES_2023</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Nombre</th><th>Carrera</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Ana García</td><td>Sistemas</td></tr>
+                            <tr><td>Carlos López</td><td>Industrial</td></tr>
+                            <tr><td>María Rodríguez</td><td>Sistemas</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h3>Tabla: ESTUDIANTES_2024</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Nombre</th><th>Carrera</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>María Rodríguez</td><td>Sistemas</td></tr>
+                            <tr><td>Juan Martínez</td><td>Civil</td></tr>
+                            <tr><td>Laura Fernández</td><td>Sistemas</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="interactive-area">
+                <h3>🎮 Práctica Interactiva</h3>
+                <div class="operation-symbol">ESTUDIANTES_2023 ∪ ESTUDIANTES_2024</div>
+                
+                <button class="btn-execute" onclick="ejecutarUnion()">🔗 Ejecutar Unión</button>
+                
+                <div id="resultado-union" class="result-table"></div>
+            </div>
+
+            <div class="note">
+                <strong>💡 Observa:</strong> María Rodríguez aparece en ambas tablas, pero en el resultado de la unión solo aparece una vez porque se eliminan los duplicados.
+            </div>
+        </div>
+
+        <!-- Sección Diferencia -->
+        <div id="diferencia" class="content-section">
+            <h2>➖ Operación de Diferencia (−)</h2>
+            
+            <div class="definition-box">
+                <h3>Definición</h3>
+                <p>La operación de <strong>diferencia</strong> retorna las tuplas que están en la primera relación pero no en la segunda. Las relaciones deben ser compatibles.</p>
+                <div class="formula">R − S</div>
+            </div>
+
+            <div class="grid-2">
+                <div>
+                    <h3>Tabla: INSCRITOS</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Nombre</th><th>Curso</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Ana García</td><td>Base de Datos</td></tr>
+                            <tr><td>Carlos López</td><td>Base de Datos</td></tr>
+                            <tr><td>María Rodríguez</td><td>Base de Datos</td></tr>
+                            <tr><td>Juan Martínez</td><td>Base de Datos</td></tr>
+                            <tr><td>Laura Fernández</td><td>Base de Datos</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h3>Tabla: APROBADOS</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Nombre</th><th>Curso</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Ana García</td><td>Base de Datos</td></tr>
+                            <tr><td>María Rodríguez</td><td>Base de Datos</td></tr>
+                            <tr><td>Laura Fernández</td><td>Base de Datos</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="interactive-area">
+                <h3>🎮 Práctica Interactiva</h3>
+                <p>Encuentra los estudiantes que NO aprobaron:</p>
+                <div class="operation-symbol">INSCRITOS − APROBADOS</div>
+                
+                <button class="btn-execute" onclick="ejecutarDiferencia()">➖ Ejecutar Diferencia</button>
+                
+                <div id="resultado-diferencia" class="result-table"></div>
+            </div>
+
+            <div class="example-box">
+                <h4>💡 Interpretación</h4>
+                <p>El resultado muestra los estudiantes inscritos que NO están en la lista de aprobados, es decir, los que reprobaron el curso.</p>
+            </div>
+        </div>
+
+        <!-- Sección Producto Cartesiano -->
+        <div id="producto" class="content-section">
+            <h2>✖️ Producto Cartesiano (×)</h2>
+            
+            <div class="definition-box">
+                <h3>Definición</h3>
+                <p>El <strong>producto cartesiano</strong> combina cada tupla de la primera relación con cada tupla de la segunda relación.</p>
+                <div class="formula">R × S</div>
+                <p style="margin-top: 10px;">Si R tiene n tuplas y S tiene m tuplas, el resultado tendrá n × m tuplas.</p>
+            </div>
+
+            <div class="grid-2">
+                <div>
+                    <h3>Tabla: ESTUDIANTES</h3>
+                    <table>
+                        <thead>
+                            <tr><th>ID</th><th>Nombre</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>Ana García</td></tr>
+                            <tr><td>2</td><td>Carlos López</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h3>Tabla: CURSOS</h3>
+                    <table>
+                        <thead>
+                            <tr><th>CodCurso</th><th>NombreCurso</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>BD01</td><td>Base de Datos</td></tr>
+                            <tr><td>ALG01</td><td>Algoritmos</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="interactive-area">
+                <h3>🎮 Práctica Interactiva</h3>
+                <div class="operation-symbol">ESTUDIANTES × CURSOS</div>
+                <p>Resultado: 2 estudiantes × 2 cursos = 4 combinaciones</p>
+                
+                <button class="btn-execute" onclick="ejecutarProducto()">✖️ Ejecutar Producto Cartesiano</button>
+                
+                <div id="resultado-producto" class="result-table"></div>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Importante:</strong> El producto cartesiano genera muchas tuplas y generalmente se usa junto con una selección para filtrar combinaciones relevantes. Esta combinación se conoce como Join.
+            </div>
+        </div>
+
+        <!-- Sección Join -->
+        <div id="join" class="content-section">
+            <h2>🔀 Operación Join (⋈)</h2>
+            
+            <div class="definition-box">
+                <h3>Definición</h3>
+                <p>El <strong>Join</strong> combina tuplas de dos relaciones basándose en una condición de igualdad entre atributos. Es equivalente a un producto cartesiano seguido de una selección.</p>
+                <div class="formula">R ⋈<sub>condición</sub> S = σ<sub>condición</sub>(R × S)</div>
+            </div>
+
+            <h3>Tipos de Join</h3>
+            <div class="grid-2">
+                <div style="background: #f0f4ff; padding: 15px; border-radius: 8px;">
+                    <h4>Natural Join (⋈)</h4>
+                    <p>Une tablas basándose en atributos con el mismo nombre y tipo.</p>
+                </div>
+                <div style="background: #fff9e6; padding: 15px; border-radius: 8px;">
+                    <h4>Theta Join (⋈<sub>θ</sub>)</h4>
+                    <p>Une tablas basándose en cualquier condición especificada.</p>
+                </div>
+            </div>
+
+            <div class="grid-2" style="margin-top: 25px;">
+                <div>
+                    <h3>Tabla: ESTUDIANTES</h3>
+                    <table>
+                        <thead>
+                            <tr><th>EstID</th><th>Nombre</th><th>CarreraID</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>Ana García</td><td>1</td></tr>
+                            <tr><td>2</td><td>Carlos López</td><td>2</td></tr>
+                            <tr><td>3</td><td>María Rodríguez</td><td>1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h3>Tabla: CARRERAS</h3>
+                    <table>
+                        <thead>
+                            <tr><th>CarreraID</th><th>NombreCarrera</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>Ingeniería de Sistemas</td></tr>
+                            <tr><td>2</td><td>Ingeniería Industrial</td></tr>
+                            <tr><td>3</td><td>Ingeniería Civil</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="interactive-area">
+                <h3>🎮 Práctica Interactiva</h3>
+                <div class="operation-symbol">ESTUDIANTES ⋈<sub>CarreraID</sub> CARRERAS</div>
+                
+                <button class="btn-execute" onclick="ejecutarJoin()">🔀 Ejecutar Join</button>
+                
+                <div id="resultado-join" class="result-table"></div>
+            </div>
+
+            <div class="note">
+                <strong>💡 Observa:</strong> Solo se combinan los estudiantes con las carreras que tienen el mismo CarreraID. La Ingeniería Civil no aparece porque ningún estudiante la tiene asignada.
+            </div>
+        </div>
+
+        <!-- Sección División -->
+        <div id="division" class="content-section">
+            <h2>➗ Operación de División (÷)</h2>
+            
+            <div class="definition-box">
+                <h3>Definición</h3>
+                <p>La operación de <strong>división</strong> es útil para consultas del tipo "para todos". Encuentra tuplas en R que están asociadas con TODAS las tuplas de S.</p>
+                <div class="formula">R ÷ S</div>
+            </div>
+
+            <div class="grid-2">
+                <div>
+                    <h3>Tabla: INSCRIPCIONES</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Estudiante</th><th>Curso</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Ana</td><td>BD</td></tr>
+                            <tr><td>Ana</td><td>ALG</td></tr>
+                            <tr><td>Ana</td><td>POO</td></tr>
+                            <tr><td>Carlos</td><td>BD</td></tr>
+                            <tr><td>Carlos</td><td>ALG</td></tr>
+                            <tr><td>María</td><td>BD</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h3>Tabla: CURSOS_OBLIGATORIOS</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Curso</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>BD</td></tr>
+                            <tr><td>ALG</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="interactive-area">
+                <h3>🎮 Práctica Interactiva</h3>
+                <p>¿Qué estudiantes están inscritos en TODOS los cursos obligatorios?</p>
+                <div class="operation-symbol">INSCRIPCIONES ÷ CURSOS_OBLIGATORIOS</div>
+                
+                <button class="btn-execute" onclick="ejecutarDivision()">➗ Ejecutar División</button>
+                
+                <div id="resultado-division" class="result-table"></div>
+            </div>
+
+            <div class="example-box">
+                <h4>💡 Interpretación</h4>
+                <p>Ana y Carlos están inscritos en BD y ALG (todos los cursos obligatorios). María solo está inscrita en BD, por lo que no aparece en el resultado.</p>
+            </div>
+        </div>
+
+        <!-- Sección Práctica -->
+        <div id="practica" class="content-section">
+            <h2>🎯 Práctica Integrada</h2>
+            
+            <h3>Escenario: Sistema Universitario</h3>
+            
+            <div class="grid-2">
+                <div>
+                    <h4>Tabla: ESTUDIANTES</h4>
+                    <table>
+                        <thead>
+                            <tr><th>ID</th><th>Nombre</th><th>CarreraID</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>Ana García</td><td>1</td></tr>
+                            <tr><td>2</td><td>Carlos López</td><td>2</td></tr>
+                            <tr><td>3</td><td>María Rodríguez</td><td>1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h4>Tabla: MATERIAS</h4>
+                    <table>
+                        <thead>
+                            <tr><th>EstID</th><th>Materia</th><th>Nota</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>BD</td><td>4.5</td></tr>
+                            <tr><td>1</td><td>ALG</td><td>4.2</td></tr>
+                            <tr><td>2</td><td>BD</td><td>3.8</td></tr>
+                            <tr><td>3</td><td>BD</td><td>4.7</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="interactive-area">
+                <h3>🎮 Consultas Complejas</h3>
+                <p>Selecciona una consulta para ejecutar:</p>
+                
+                <select id="consulta-practica" style="width: 100%; margin: 15px 0;">
+                    <option value="1">Nombres de estudiantes con nota > 4.0 en BD</option>
+                    <option value="2">Estudiantes de CarreraID=1 y sus notas</option>
+                    <option value="3">Proyección: Solo nombres y materias</option>
+                </select>
+                
+                <button class="btn-execute" onclick="ejecutarPractica()">⚡ Ejecutar Consulta</button>
+                
+                <div id="resultado-practica" class="result-table"></div>
+                <div id="explicacion-practica" style="margin-top: 15px; padding: 15px; background: #f0f4ff; border-radius: 8px;"></div>
+            </div>
+
+            <div class="note">
+                <strong>🎓 Ejercicio:</strong> Intenta pensar cómo expresarías cada consulta usando las operaciones del álgebra relacional antes de ejecutarla.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos base
+        const estudiantes = [
+            {ID: 1, Nombre: 'Ana García', Edad: 20, Carrera: 'Sistemas', Promedio: 4.5},
+            {ID: 2, Nombre: 'Carlos López', Edad: 22, Carrera: 'Industrial', Promedio: 3.8},
+            {ID: 3, Nombre: 'María Rodríguez', Edad: 19, Carrera: 'Sistemas', Promedio: 4.2},
+            {ID: 4, Nombre: 'Juan Martínez', Edad: 21, Carrera: 'Civil', Promedio: 3.5},
+            {ID: 5, Nombre: 'Laura Fernández', Edad: 20, Carrera: 'Sistemas', Promedio: 4.7}
+        ];
+
+        // Función para cambiar de sección
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.content-section');
+            const buttons = document.querySelectorAll('.nav-btn');
+            
+            sections.forEach(section => section.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Función auxiliar para crear tabla HTML
+        function createTable(data, columns) {
+            if (data.length === 0) {
+                return '<p style="text-align: center; color: #999;">No hay resultados</p>';
+            }
+            
+            let html = '<table><thead><tr>';
+            columns.forEach(col => {
+                html += `<th>${col}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            data.forEach(row => {
+                html += '<tr>';
+                columns.forEach(col => {
+                    html += `<td>${row[col]}</td>`;
+                });
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            return html;
+        }
+
+        // Selección
+        function ejecutarSeleccion() {
+            const condicion = document.getElementById('sel-condicion').value;
+            let resultado = [];
+            
+            switch(condicion) {
+                case 'carrera':
+                    resultado = estudiantes.filter(e => e.Carrera === 'Sistemas');
+                    break;
+                case 'edad':
+                    resultado = estudiantes.filter(e => e.Edad >= 21);
+                    break;
+                case 'promedio':
+                    resultado = estudiantes.filter(e => e.Promedio > 4.0);
+                    break;
+                case 'multiples':
+                    resultado = estudiantes.filter(e => e.Carrera === 'Sistemas' && e.Promedio >= 4.5);
+                    break;
+            }
+            
+            const html = createTable(resultado, ['ID', 'Nombre', 'Edad', 'Carrera', 'Promedio']);
+            document.getElementById('resultado-seleccion').innerHTML = 
+                `<h4>Resultado de la Selección (${resultado.length} tuplas):</h4>` + html;
+        }
+
+        function resetSeleccion() {
+            document.getElementById('resultado-seleccion').innerHTML = '';
+        }
+
+        // Proyección
+        function ejecutarProyeccion() {
+            const checkboxes = document.querySelectorAll('#proyeccion-checkboxes input[type="checkbox"]:checked');
+            const columnas = Array.from(checkboxes).map(cb => cb.value);
+            
+            if (columnas.length === 0) {
+                alert('Selecciona al menos una columna');
+                return;
+            }
+            
+            const resultado = estudiantes.map(e => {
+                const obj = {};
+                columnas.forEach(col => {
+                    obj[col] = e[col];
+                });
+                return obj;
+            });
+            
+            // Eliminar duplicados
+            const unicos = [];
+            resultado.forEach(item => {
+                const existe = unicos.some(u => 
+                    columnas.every(col => u[col] === item[col])
+                );
+                if (!existe) unicos.push(item);
+            });
+            
+            const html = createTable(unicos, columnas);
+            document.getElementById('resultado-proyeccion').innerHTML = 
+                `<h4>Resultado de la Proyección (${unicos.length} tuplas únicas):</h4>` + html;
+        }
+
+        function resetProyeccion() {
+            document.getElementById('resultado-proyeccion').innerHTML = '';
+        }
+
+        // Unión
+        function ejecutarUnion() {
+            const est2023 = [
+                {Nombre: 'Ana García', Carrera: 'Sistemas'},
+                {Nombre: 'Carlos López', Carrera: 'Industrial'},
+                {Nombre: 'María Rodríguez', Carrera: 'Sistemas'}
+            ];
+            
+            const est2024 = [
+                {Nombre: 'María Rodríguez', Carrera: 'Sistemas'},
+                {Nombre: 'Juan Martínez', Carrera: 'Civil'},
+                {Nombre: 'Laura Fernández', Carrera: 'Sistemas'}
+            ];
+            
+            const union = [...est2023];
+            est2024.forEach(e2 => {
+                const existe = union.some(e1 => 
+                    e1.Nombre === e2.Nombre && e1.Carrera === e2.Carrera
+                );
+                if (!existe) union.push(e2);
+            });
+            
+            const html = createTable(union, ['Nombre', 'Carrera']);
+            document.getElementById('resultado-union').innerHTML = 
+                `<h4>Resultado de la Unión (${union.length} tuplas):</h4>` + html;
+        }
+
+        // Diferencia
+        function ejecutarDiferencia() {
+            const inscritos = [
+                {Nombre: 'Ana García', Curso: 'Base de Datos'},
+                {Nombre: 'Carlos López', Curso: 'Base de Datos'},
+                {Nombre: 'María Rodríguez', Curso: 'Base de Datos'},
+                {Nombre: 'Juan Martínez', Curso: 'Base de Datos'},
+                {Nombre: 'Laura Fernández', Curso: 'Base de Datos'}
+            ];
+            
+            const aprobados = [
+                {Nombre: 'Ana García', Curso: 'Base de Datos'},
+                {Nombre: 'María Rodríguez', Curso: 'Base de Datos'},
+                {Nombre: 'Laura Fernández', Curso: 'Base de Datos'}
+            ];
+            
+            const diferencia = inscritos.filter(i => 
+                !aprobados.some(a => a.Nombre === i.Nombre && a.Curso === i.Curso)
+            );
+            
+            const html = createTable(diferencia, ['Nombre', 'Curso']);
+            document.getElementById('resultado-diferencia').innerHTML = 
+                `<h4>Estudiantes que NO aprobaron (${diferencia.length} tuplas):</h4>` + html;
+        }
+
+        // Producto Cartesiano
+        function ejecutarProducto() {
+            const est = [
+                {ID: 1, Nombre: 'Ana García'},
+                {ID: 2, Nombre: 'Carlos López'}
+            ];
+            
+            const cursos = [
+                {CodCurso: 'BD01', NombreCurso: 'Base de Datos'},
+                {CodCurso: 'ALG01', NombreCurso: 'Algoritmos'}
+            ];
+            
+            const producto = [];
+            est.forEach(e => {
+                cursos.forEach(c => {
+                    producto.push({...e, ...c});
+                });
+            });
+            
+            const html = createTable(producto, ['ID', 'Nombre', 'CodCurso', 'NombreCurso']);
+            document.getElementById('resultado-producto').innerHTML = 
+                `<h4>Resultado del Producto Cartesiano (${producto.length} tuplas):</h4>` + html;
+        }
+
+        // Join
+        function ejecutarJoin() {
+            const est = [
+                {EstID: 1, Nombre: 'Ana García', CarreraID: 1},
+                {EstID: 2, Nombre: 'Carlos López', CarreraID: 2},
+                {EstID: 3, Nombre: 'María Rodríguez', CarreraID: 1}
+            ];
+            
+            const carreras = [
+                {CarreraID: 1, NombreCarrera: 'Ingeniería de Sistemas'},
+                {CarreraID: 2, NombreCarrera: 'Ingeniería Industrial'},
+                {CarreraID: 3, NombreCarrera: 'Ingeniería Civil'}
+            ];
+            
+            const join = [];
+            est.forEach(e => {
+                carreras.forEach(c => {
+                    if (e.CarreraID === c.CarreraID) {
+                        join.push({
+                            EstID: e.EstID,
+                            Nombre: e.Nombre,
+                            CarreraID: e.CarreraID,
+                            NombreCarrera: c.NombreCarrera
+                        });
+                    }
+                });
+            });
+            
+            const html = createTable(join, ['EstID', 'Nombre', 'CarreraID', 'NombreCarrera']);
+            document.getElementById('resultado-join').innerHTML = 
+                `<h4>Resultado del Join (${join.length} tuplas):</h4>` + html;
+        }
+
+        // División
+        function ejecutarDivision() {
+            const inscripciones = [
+                {Estudiante: 'Ana', Curso: 'BD'},
+                {Estudiante: 'Ana', Curso: 'ALG'},
+                {Estudiante: 'Ana', Curso: 'POO'},
+                {Estudiante: 'Carlos', Curso: 'BD'},
+                {Estudiante: 'Carlos', Curso: 'ALG'},
+                {Estudiante: 'María', Curso: 'BD'}
+            ];
+            
+            const obligatorios = ['BD', 'ALG'];
+            
+            const estudiantes = [...new Set(inscripciones.map(i => i.Estudiante))];
+            const resultado = estudiantes.filter(est => {
+                const cursosEst = inscripciones
+                    .filter(i => i.Estudiante === est)
+                    .map(i => i.Curso);
+                return obligatorios.every(curso => cursosEst.includes(curso));
+            }).map(est => ({Estudiante: est}));
+            
+            const html = createTable(resultado, ['Estudiante']);
+            document.getElementById('resultado-division').innerHTML = 
+                `<h4>Estudiantes con TODOS los cursos obligatorios (${resultado.length} tuplas):</h4>` + html;
+        }
+
+        // Práctica
+        function ejecutarPractica() {
+            const consulta = document.getElementById('consulta-practica').value;
+            const est = [
+                {ID: 1, Nombre: 'Ana García', CarreraID: 1},
+                {ID: 2, Nombre: 'Carlos López', CarreraID: 2},
+                {ID: 3, Nombre: 'María Rodríguez', CarreraID: 1}
+            ];
+            
+            const materias = [
+                {EstID: 1, Materia: 'BD', Nota: 4.5},
+                {EstID: 1, Materia: 'ALG', Nota: 4.2},
+                {EstID: 2, Materia: 'BD', Nota: 3.8},
+                {EstID: 3, Materia: 'BD', Nota: 4.7}
+            ];
+            
+            let resultado = [];
+            let explicacion = '';
+            let columnas = [];
+            
+            switch(consulta) {
+                case '1':
+                    // σ Nota>4.0 AND Materia='BD' (MATERIAS) ⋈ ESTUDIANTES
+                    const notasAltas = materias.filter(m => m.Nota > 4.0 && m.Materia === 'BD');
+                    resultado = notasAltas.map(m => {
+                        const e = est.find(e => e.ID === m.EstID);
+                        return {Nombre: e.Nombre, Materia: m.Materia, Nota: m.Nota};
+                    });
+                    columnas = ['Nombre', 'Materia', 'Nota'];
+                    explicacion = '<strong>Operación:</strong> σ<sub>Nota>4.0 AND Materia=\'BD\'</sub>(MATERIAS) ⋈<sub>EstID=ID</sub> π<sub>Nombre</sub>(ESTUDIANTES)';
+                    break;
+                    
+                case '2':
+                    // σ CarreraID=1 (ESTUDIANTES) ⋈ MATERIAS
+                    const estSistemas = est.filter(e => e.CarreraID === 1);
+                    resultado = [];
+                    estSistemas.forEach(e => {
+                        materias.forEach(m => {
+                            if (m.EstID === e.ID) {
+                                resultado.push({
+                                    Nombre: e.Nombre,
+                                    Materia: m.Materia,
+                                    Nota: m.Nota
+                                });
+                            }
+                        });
+                    });
+                    columnas = ['Nombre', 'Materia', 'Nota'];
+                    explicacion = '<strong>Operación:</strong> σ<sub>CarreraID=1</sub>(ESTUDIANTES) ⋈<sub>ID=EstID</sub> MATERIAS';
+                    break;
+                    
+                case '3':
+                    // π Nombre, Materia (ESTUDIANTES ⋈ MATERIAS)
+                    resultado = [];
+                    est.forEach(e => {
+                        materias.forEach(m => {
+                            if (m.EstID === e.ID) {
+                                resultado.push({
+                                    Nombre: e.Nombre,
+                                    Materia: m.Materia
+                                });
+                            }
+                        });
+                    });
+                    columnas = ['Nombre', 'Materia'];
+                    explicacion = '<strong>Operación:</strong> π<sub>Nombre, Materia</sub>(ESTUDIANTES ⋈<sub>ID=EstID</sub> MATERIAS)';
+                    break;
+            }
+            
+            const html = createTable(resultado, columnas);
+            document.getElementById('resultado-practica').innerHTML = 
+                `<h4>Resultado (${resultado.length} tuplas):</h4>` + html;
+            document.getElementById('explicacion-practica').innerHTML = explicacion;
+        }
+    </script>
+</body>
+</html>
